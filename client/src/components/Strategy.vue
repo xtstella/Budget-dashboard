@@ -4,28 +4,22 @@
       <th>platform</th>
       <th>strategy</th>
     </tr>
-    <div v-bind:key="item.id" v-for="item in data">
+    <div v-bind:key="item.id" v-for="item in panel2data">
       <tr>
         <td>{{item[0]}}</td>
         <td>
           <tr>
-            <th>id</th>
             <th>strategy_id</th>
-            <th>day</th>
             <th>spend</th>
             <th>clicks</th>
             <th>impressions</th>
           </tr>
-          <div v-bind:key="lifetime.id" v-for="lifetime in item[1]">
-            <tr>
-              <td>{{lifetime.id}}</td>
-              <td>{{lifetime.strategy_id}}</td>
-              <td>{{lifetime.day}}</td>
-              <td>{{lifetime.spend}}</td>
-              <td>{{lifetime.clicks}}</td>
-              <td>{{lifetime.impressions}}</td>
-            </tr>
-          </div>
+          <tr>
+            <td>{{item[1][0]}}</td>
+            <td>{{item[1][1]}}</td>
+            <td>{{item[1][2]}}</td>
+            <td>{{item[1][3]}}</td>
+          </tr>
         </td>
       </tr>
     </div>
@@ -40,10 +34,13 @@ export default {
   props: ["timespan"],
   data() {
     return {
-      data: []
+      data: [],
+      panel2data: [],
+      dayspend: []
     };
   },
   async mounted() {
+    this.data = [];
     await axios.get("http://127.0.0.1:3000/strategy").then(async response => {
       for (let i = 0; i < response.data.length; i++) {
         var platform = response.data[i].platform_name;
@@ -64,7 +61,52 @@ export default {
         this.data.push([platform, lifetimes]);
       }
     });
-    console.log(this.data);
+
+    // set data for chart (panel 1)
+    for (
+      var i = parseInt(this.timespan.first, 10);
+      i <= parseInt(this.timespan.last, 10);
+      i++
+    ) {
+      this.dayspend.push(0);
+    }
+    var index = 0;
+    for (
+      var i = parseInt(this.timespan.first, 10);
+      i <= parseInt(this.timespan.last, 10);
+      i++
+    ) {
+      for (let item of this.data) {
+        for (let lf of item[1]) {
+          if (parseInt(lf.day.split("T")[0].split("-")[2], 10) === i) {
+            this.dayspend[index] += lf.spend;
+          }
+        }
+      }
+      index++;
+    }
+    this.$emit("sendDaySpend", this.dayspend);
+
+    // set data for table (panel 2)
+    for (var i = 0; i < this.data.length; i++) {
+      var totalspend = 0;
+      var totalclicks = 0;
+      var totalimpressions = 0;
+      for (let item of this.data[i][1]) {
+        totalspend += item.spend;
+        totalclicks += item.clicks;
+        totalimpressions += item.impressions;
+      }
+      this.panel2data.push([
+        this.data[i][0],
+        [
+          this.data[i][1][0].strategy_id,
+          totalspend.toFixed(2),
+          totalclicks,
+          totalimpressions
+        ]
+      ]);
+    }
   }
 };
 </script>

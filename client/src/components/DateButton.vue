@@ -10,8 +10,6 @@ export default {
   data() {},
   methods: {
     toggleSelected: function() {
-      console.log(this.date.date);
-      console.log(this.timespan.first);
       if (this.date.date === this.timespan.first) {
         this.$emit("resetTimespan");
       } else {

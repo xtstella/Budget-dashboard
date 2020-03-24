@@ -10,10 +10,10 @@ module.exports = {
       strategy.getByID(req.params.id,res);
     });
     app.post('/strategy',function(req,res) {
-      todo.create(req.body,res);
+      strategy.create(req.body,res);
     });
     app.put('/strategy/:id',function(req,res) {
-      todo.update(req.body.name,req.params.id,res);
+      strategy.update(req.body.name,req.params.id,res);
     });
 
     app.get('/lifetime',function(req,res) {
@@ -23,12 +23,24 @@ module.exports = {
       lifetime.getByID(req.params.id,res);
     });
     app.post('/lifetime',function(req,res) {
-      todo.create(req.body,res);
+      lifetime.create(req.body,res);
     });
     app.put('/lifetime/:id',function(req,res) {
-      todo.update(req.body.name,req.params.id,res);
+      lifetime.update(req.body.name,req.params.id,res);
     });
 
+
+    app.get('/lifetime/getByStrategyID/:strategy_id',function(req,res) {
+      console.log(req.params.strategy_id)
+      lifetime.getByStrategyID(req.params.strategy_id,res);
+    });
+
+    app.get('/getTimeRange',function(req,res) {
+      lifetime.getByStrategyID(req.params.strategy_id,res);
+    });
+    app.get('/getDailyCost',function(req,res) {
+      lifetime.getDailyCost(res);
+    });
 
   }
 };

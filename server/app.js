@@ -4,10 +4,11 @@ const bodyParser = require("body-parser");
 
 const connection = require('./app/config/connection');
 const routes = require('./app/controllers/routes');
-
+var cors = require('cors');
 var app = express();
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
+app.use(cors());
 
 const hostname = '127.0.0.1';
 const PORT = 3000;

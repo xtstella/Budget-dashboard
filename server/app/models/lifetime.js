@@ -19,6 +19,26 @@ function Lifetime() {
       });
     });
   };
+  this.getByStrategyID = function(id,res) {
+    connection.acquire(function(err,con) {
+      con.query('select * from lifetime where strategy_id = ?', id, function(err,result) {
+        con.release();
+        res.send(result);
+        console.log("Get lifetime by Strategy ID successful");
+      });
+    });
+  };
+
+  this.getDailyCost = function(res) {
+    connection.acquire(function(err,con) {
+      con.query('select * from lifetime where strategy_id = ?', id, function(err,result) {
+        con.release();
+        res.send(result);
+        console.log("Get lifetime by Strategy ID successful");
+      });
+    });
+  };
+
 };
 
 module.exports = new Lifetime();
