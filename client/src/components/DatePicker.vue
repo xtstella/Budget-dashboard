@@ -3,7 +3,23 @@
     <h1>{{month}}</h1>
     <div class="dates">
       <div v-bind:key="date.id" v-for="date in dates">
-        <DateButton v-bind:date="date" v-on:setTimespan="setTimespan" />
+        <div v-if="date.id+1 >= timespan.first && date.id+1 <= timespan.last">
+          <DateButton
+            v-bind:date="date"
+            class="is-selected"
+            v-bind:timespan="timespan"
+            v-on:setTimespan="setTimespan"
+            v-on:resetTimespan="resetTimespan"
+          />
+        </div>
+        <div v-else>
+          <DateButton
+            v-bind:date="date"
+            v-bind:timespan="timespan"
+            v-on:setTimespan="setTimespan"
+            v-on:resetTimespan="resetTimespan"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -42,6 +58,11 @@ export default {
       } else {
         this.timespan.last = date;
       }
+      this.$emit("sendTimespan", this.timespan);
+    },
+    resetTimespan: function() {
+      this.timespan.first = 100;
+      this.timespan.last = 100;
       this.$emit("sendTimespan", this.timespan);
     }
   }

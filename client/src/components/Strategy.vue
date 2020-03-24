@@ -56,7 +56,7 @@ export default {
           .then(response => {
             for (let item of response.data) {
               let day = parseInt(item.day.split("T")[0].split("-")[2], 10);
-              if (day > this.timespan.first && day < this.timespan.last) {
+              if (day >= this.timespan.first && day <= this.timespan.last) {
                 lifetimes.push(item);
               }
             }

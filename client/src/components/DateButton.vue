@@ -1,21 +1,22 @@
 <template>
-  <button
-    @click="toggleSelected"
-    class="date"
-    v-bind:class="{'is-selected': date.selected}"
-  >{{date.date}}</button>
+  <button @click="toggleSelected" class="date">{{date.date}}</button>
 </template>
 
 <script>
 export default {
   name: "DateButton",
-  props: ["date"],
+  props: ["date", "timespan"],
   components: {},
   data() {},
   methods: {
     toggleSelected: function() {
-      this.$emit("setTimespan", this.date.date)
-      this.date.selected = !this.date.selected;
+      console.log(this.date.date);
+      console.log(this.timespan.first);
+      if (this.date.date === this.timespan.first) {
+        this.$emit("resetTimespan");
+      } else {
+        this.$emit("setTimespan", this.date.date);
+      }
     }
   }
 };
