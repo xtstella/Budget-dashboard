@@ -13,7 +13,8 @@ export default {
   components: {},
   data() {},
   methods: {
-    toggleSelected() {
+    toggleSelected: function() {
+      this.$emit("setTimespan", this.date.date)
       this.date.selected = !this.date.selected;
     }
   }

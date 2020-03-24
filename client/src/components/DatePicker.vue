@@ -3,8 +3,7 @@
     <h1>{{month}}</h1>
     <div class="dates">
       <div v-bind:key="date.id" v-for="date in dates">
-        <DateButton v-bind:date="date" />
-        <!-- <button v-on:click="toggleSelected" class="date">Hello</button> -->
+        <DateButton v-bind:date="date" v-on:setTimespan="setTimespan" />
       </div>
     </div>
   </div>
@@ -23,16 +22,28 @@ export default {
     var dates = [];
     if (month === 2) {
       for (var i = 0; i < 31; i++) {
-        dates.push({ id: i, date: i + 1, selected: false });
+        if (i < 9) {
+          dates.push({ id: i, date: "0" + (i + 1), selected: false });
+        } else {
+          dates.push({ id: i, date: (i + 1).toString(), selected: false });
+        }
       }
     }
     return {
       dates: dates,
-      month: month === 2 ? "Mars" : "another month"
+      month: month === 2 ? "Mars" : "another month",
+      timespan: { first: 100, last: 100 }
     };
   },
   methods: {
-    toggleSelected() {}
+    setTimespan: function(date) {
+      if (date < this.timespan.first) {
+        this.timespan.first = date;
+      } else {
+        this.timespan.last = date;
+      }
+      this.$emit("sendTimespan", this.timespan);
+    }
   }
 };
 </script>
