@@ -7,7 +7,7 @@ A budget tracking dashboard created with REST API using Node, Express, MySQL and
 ## Technologies
 Project is created with:
 * VueJS version: 2.0
-* Vue-chartjs@3.5.0
+* jscharting-vue
 
 * NodeJS version: 13.9.0
 

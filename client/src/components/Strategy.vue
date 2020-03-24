@@ -1,24 +1,28 @@
 <template>
   <table>
-    <tr>
-      <th>platform</th>
-      <th>strategy</th>
+    <tr class="firstrow">
+      <th class='firstth'>platform</th>
+      <th class='secondth'>strategy</th>
     </tr>
     <div v-bind:key="item.id" v-for="item in panel2data">
       <tr>
         <td>{{item[0]}}</td>
         <td>
           <tr>
-            <th>strategy_id</th>
-            <th>spend</th>
-            <th>clicks</th>
-            <th>impressions</th>
+            <th>Strategy name</th>
+            <th>Advertiser id</th>
+            <th>Strategy id</th>
+            <th>Total Spends</th>
+            <th>Total clicks</th>
+            <th>Total impressions</th>
           </tr>
           <tr>
             <td>{{item[1][0]}}</td>
             <td>{{item[1][1]}}</td>
             <td>{{item[1][2]}}</td>
             <td>{{item[1][3]}}</td>
+            <td>{{item[1][4]}}</td>
+            <td>{{item[1][5]}}</td>
           </tr>
         </td>
       </tr>
@@ -36,7 +40,8 @@ export default {
     return {
       data: [],
       panel2data: [],
-      dayspend: []
+      dayspend: [],
+      strategydata: []
     };
   },
   async mounted() {
@@ -45,6 +50,11 @@ export default {
       for (let i = 0; i < response.data.length; i++) {
         var platform = response.data[i].platform_name;
         var lifetimes = [];
+        this.strategydata.push([
+          response.data[i].id,
+          response.data[i].strategy_name,
+          response.data[i].advertiser_id
+        ]);
         await axios
           .get(
             "http://127.0.0.1:3000/lifetime/getByStrategyID/" +
@@ -97,9 +107,19 @@ export default {
         totalclicks += item.clicks;
         totalimpressions += item.impressions;
       }
+      var strategy_name;
+      var advertiser_id;
+      for (let strat of this.strategydata) {
+        if (strat[0] === this.data[i][1][0].strategy_id) {
+          strategy_name = strat[1];
+          advertiser_id = strat[2];
+        }
+      }
       this.panel2data.push([
         this.data[i][0],
         [
+          strategy_name,
+          advertiser_id,
           this.data[i][1][0].strategy_id,
           totalspend.toFixed(2),
           totalclicks,
@@ -117,10 +137,21 @@ table {
   border-color: black;
   border-style: solid;
   border-width: 2px;
+  width: 500px;
+}
+.firstrow {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
 }
 td {
   border-color: lightblue;
   border-style: solid;
   border-width: 2px;
+}
+
+.secondth {
+  margin-left: 20px;
 }
 </style>
